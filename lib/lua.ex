@@ -14,6 +14,7 @@ defmodule Lua do
   def encode(value) when is_binary(value),   do: value
   def encode(value) when is_atom(value),     do: Atom.to_string(value)
   def encode(value) when is_function(value), do: {:function, wrap_function(value)}
+  def encode(%Lua.Table{tref: value}), do: value
 
   @doc "Encodes an Elixir term as a Lua value."
   @spec encode(Lua.State.t, nil | boolean | number | binary | atom | map) ::
