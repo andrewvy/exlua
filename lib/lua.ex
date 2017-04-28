@@ -98,8 +98,10 @@ defmodule Lua do
   @doc "Interprets a Lua source file, for its side effects."
   @spec exec_file!(Lua.State.t, binary) :: Lua.State.t
   def exec_file!(%State{luerl: state}, filepath) when is_binary(filepath) do
-    {_, state} = :luerl.dofile(filepath |> String.to_charlist, state)
-    State.wrap(state)
+    case :luerl.dofile(filepath |> String.to_charlist, state) do
+      {:error, _, _} = error -> error
+      {_, state} -> State.wrap(state)
+    end
   end
 
   @doc "Compiles a Lua code snippet into a chunk."
